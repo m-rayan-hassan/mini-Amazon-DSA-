@@ -1,0 +1,20 @@
+1 Karachi
+2 Lahore
+3 Islamabad
+4 Peshawar
+5 Quetta
+6 Multan
+7 Faisalabad
+8 Hyderabad
+
+
+1 2 1210
+1 8 160
+8 2 1150
+2 3 380
+3 4 180
+2 7 140
+7 6 260
+6 1 890
+6 5 680
+5 1 690

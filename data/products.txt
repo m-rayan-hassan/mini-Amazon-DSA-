@@ -1,0 +1,21 @@
+# ProductID | Name | Price | Rating | Stock
+1 | Laptop | 95000 | 4.6 | 12
+2 | Headphones | 3500 | 4.1 | 50
+3 | Shoes | 2200 | 4.3 | 27
+4 | Mechanical Keyboard | 1800 | 4.4 | 31
+5 | Smart Watch | 4500 | 4.0 | 18
+6 | Backpack | 3200 | 4.2 | 40
+7 | Gaming Mouse | 2500 | 4.5 | 22
+8 | LED Monitor | 32000 | 4.7 | 8
+9 | Perfume | 1800 | 4.1 | 35
+10 | Powerbank | 3000 | 4.3 | 53
+11 | Notebook | 150 | 4.0 | 90
+12 | Bluetooth Speaker | 4200 | 4.4 | 26
+13 | Hoodie | 1800 | 4.5 | 33
+14 | Sunglasses | 2000 | 4.1 | 29
+15 | Water Bottle | 900 | 4.2 | 47
+16 | Phone Case | 500 | 4.0 | 120
+17 | USB Cable | 250 | 4.3 | 85
+18 | Desk Lamp | 2200 | 4.4 | 15
+19 | Earbuds | 1500 | 4.2 | 60
+20 | Wallet | 1200 | 4.1 | 34
