@@ -35,7 +35,7 @@ void Customer::login(CustomerHashTable &ht, ProductBST &pBST) {
     if (c != nullptr && c->getPassword() == password) {
         cout << "Login successful! Welcome " << username << endl;
         pBST.displayPostorder();
-        customerOptions(pBST);
+        customerOptions(pBST, *c);
     } else {
         cout << "Invalid username or password.\n";
     }
@@ -59,7 +59,7 @@ void Customer::signup(CustomerHashTable &ht, ProductBST &pBST) {
 }
 
 
-void Customer::customerOptions(ProductBST &pBST) {
+void Customer::customerOptions(ProductBST &pBST, Customer &customer) {
     int choice;
     CartStack cartStack;
     while (true) {
@@ -83,10 +83,10 @@ void Customer::customerOptions(ProductBST &pBST) {
                 cout << "";
                 break;
             case 4:
-                Cart::addProductToCart(pBST, cartStack);
+                Cart::addProductToCart(pBST, cartStack, customer);
                 break;
             case 5:
-                Cart::cartOptions(cartStack);
+                Cart::cartOptions(cartStack, customer);
                 break;
             case 6:
                 return;

@@ -7,7 +7,7 @@
 using namespace std;
 
 
-void Cart::addProductToCart(ProductBST &pBST, CartStack &cartStack) {
+void Cart::addProductToCart(ProductBST &pBST, CartStack &cartStack, Customer &customer) {
     int productId;
     int quantity;
     cout << "Enter Product ID to add to cart: ";
@@ -32,15 +32,15 @@ void Cart::addProductToCart(ProductBST &pBST, CartStack &cartStack) {
     cartStack.push(cartItem);
 }
 
-void Cart::displayCart(CartStack &cartStack) {
+void Cart::displayCart(CartStack &cartStack, Customer& customer) {
     if (cartStack.isEmpty()) {
 
     }
     cartStack.display();
 }
 
-void Cart::cartOptions(CartStack &cartStack) {
-    displayCart(cartStack);
+void Cart::cartOptions(CartStack &cartStack, Customer &customer) {
+    displayCart(cartStack, customer);
     int choice;
     cout << "1. Delete/Undo last added product: (" << cartStack.peek().productName << ")" << endl;
     cout << "2. Checkout" << endl;

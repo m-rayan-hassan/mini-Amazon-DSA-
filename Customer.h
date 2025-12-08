@@ -33,7 +33,7 @@ public:
 
     static void signup(CustomerHashTable &ht, ProductBST &pBST);
 
-    static void customerOptions(ProductBST &pBST);
+    static void customerOptions(ProductBST &pBST, Customer &customer);
 
 
 };
