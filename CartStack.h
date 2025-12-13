@@ -2,6 +2,9 @@
 #define PROJECT_CARTSTACK_H
 
 #include "CartItem.h"
+#include <iostream>
+#include <vector>
+using namespace std;
 
 struct NodeStack {
     CartItem cartItem;
@@ -12,54 +15,110 @@ class CartStack {
     NodeStack* top;
 
 public:
+    // Constructor
     CartStack() {
         top = nullptr;
     }
 
-    bool isEmpty() {
+    // 🔴 DESTRUCTOR (VERY IMPORTANT)
+    ~CartStack() {
+        clear();
+    }
+
+    // 🔴 COPY CONSTRUCTOR (DEEP COPY)
+    CartStack(const CartStack& other) {
+        top = nullptr;
+
+        if (other.top == nullptr) return;
+
+        vector<CartItem> temp;
+        NodeStack* curr = other.top;
+
+        while (curr != nullptr) {
+            temp.push_back(curr->cartItem);
+            curr = curr->next;
+        }
+
+        // push back in reverse order
+        for (int i = temp.size() - 1; i >= 0; i--) {
+            push(temp[i]);
+        }
+    }
+
+    // 🔴 COPY ASSIGNMENT OPERATOR (DEEP COPY)
+    CartStack& operator=(const CartStack& other) {
+        if (this == &other) return *this;
+
+        clear();
+
+        vector<CartItem> temp;
+        NodeStack* curr = other.top;
+
+        while (curr != nullptr) {
+            temp.push_back(curr->cartItem);
+            curr = curr->next;
+        }
+
+        for (int i = temp.size() - 1; i >= 0; i--) {
+            push(temp[i]);
+        }
+
+        return *this;
+    }
+
+    bool isEmpty() const {
         return top == nullptr;
     }
 
-    void push(CartItem &cartItem) {
+    void push(const CartItem &cartItem) {
         NodeStack* newNode = new NodeStack();
         newNode->cartItem = cartItem;
         newNode->next = top;
         top = newNode;
-        cout << "Product: " << cartItem.productName << " added to cart successfully!" << endl;
     }
 
-    void pop() {
+    CartItem pop() {
         if (isEmpty()) {
-            return;
+            return CartItem(0, "", 0);
         }
+
         NodeStack* temp = top;
+        CartItem item = temp->cartItem;
+
         top = top->next;
         delete temp;
+
+        return item;
     }
 
-    CartItem peek() {
+    CartItem peek() const {
         if (isEmpty()) {
-            CartItem c;
-            return c;
+            return CartItem();
         }
         return top->cartItem;
     }
 
-    void display() {
+    void clear() {
+        while (!isEmpty()) {
+            pop();
+        }
+    }
+
+    void display() const {
         if (isEmpty()) {
             cout << "Cart is Empty!" << endl;
             return;
         }
+
         NodeStack* temp = top;
-        cout << "Cart Items: " << endl;
         while (temp != nullptr) {
             cout << "Product ID: " << temp->cartItem.productId << endl;
-            cout << "Product Name: " << temp->cartItem.productName;
-            cout << "Quantity: " << temp->cartItem.quantity;
+            cout << "Product Name: " << temp->cartItem.productName << endl;
+            cout << "Quantity: " << temp->cartItem.quantity << endl;
             cout << endl;
             temp = temp->next;
         }
     }
 };
 
-#endif //PROJECT_CARTSTACK_H
+#endif // PROJECT_CARTSTACK_H

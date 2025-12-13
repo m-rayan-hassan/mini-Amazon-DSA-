@@ -1,16 +1,17 @@
-# CustomerID | Username | Password | TotalOrders
-101 | ali | ali222 | 3
-102 | rayan | ray123 | 1
-103 | hamza | hz567 | 0
-104 | sara | s1234 | 5
-105 | faizan | fz890 | 2
-106 | zain | zain555 | 1
-107 | ahmed | ahm321 | 4
-108 | noor | nr987 | 0
-109 | hira | hr222 | 3
-110 | usman | usm444 | 1
-111 | arif | arif789 | 2
-112 | maryam | mary33 | 0
-113 | bilal | bil889 | 1
-114 | anaya | ana778 | 5
-115 | hammad | ham900 | 3
+# Username | Password | TotalOrders
+ali | ali222 | 3
+rayan | ray123 | 1
+hamza | hz567 | 0
+sara | s1234 | 5
+faizan | fz890 | 2
+zain | zain555 | 1
+ahmed | ahm321 | 4
+noor | nr987 | 0
+hira | hr222 | 3
+usman | usm444 | 1
+arif | arif789 | 2
+maryam | mary33 | 0
+bilal | bil889 | 1
+anaya | ana778 | 5
+hammad | ham900 | 3
+abc | 123 | 0

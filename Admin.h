@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 
+#include "DispatchQueue.h"
 #include "ProductBST.h"
 using namespace std;
 
@@ -15,8 +16,9 @@ private:
 
 public:
 
-    static void login(ProductBST &pBST);
-    static void adminOptions(ProductBST &pBST);
+    static void login(ProductBST &pBST, DispatchQueue &q);
+    static void adminOptions(ProductBST &pBST, DispatchQueue &q);
+    static void viewAllOrders();
 };
 
 

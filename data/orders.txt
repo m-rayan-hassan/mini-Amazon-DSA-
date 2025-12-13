@@ -1,6 +1,11 @@
-1 | 1,5
-2 | 3,5,9
-3 | 12,11
-4 | 4,5,7,13
-5 | 2,9
-6 | 6,11,12
+# orderId | username | productId | productName | quantity | status
+347125 | rayan | 102 | Laptop | 1 | Delivered
+347125 | rayan | 107 | Mouse | 2 | Delivered
+741902 | ahmed | 203 | Keyboard | 1 | Delivered
+453058 | rayan | 6 | Backpack | 3 | Delivered
+355758 | rayan | 5 | Smart Watch | 1 | Delivered
+460909 | rayan | 7 | Gaming Mouse | 2 | Delivered
+153835 | rayan | 4 | Mechanical Keyboard | 1 | Delivered
+720535 | rayan | 12 | Bluetooth Speaker | 2 | Delivered
+898720 | rayan | 14 | Sunglasses | 1 | Delivered
+873200 | rayan | 11 | Notebook | 1 | To Dispatch

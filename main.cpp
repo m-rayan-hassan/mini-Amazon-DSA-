@@ -4,6 +4,7 @@
 #include "Admin.h"
 #include "ProductBST.h"
 #include "DataLoader.h"
+#include "DispatchQueue.h"
 using namespace std;
 
 
@@ -11,6 +12,8 @@ int main() {
     int choice;
     CustomerHashTable ht;
     ProductBST pBST;
+    DispatchQueue q;
+    CartStack cartStack;
     DataLoader::loadCustomers(ht, "data/customers.txt");
     DataLoader:: loadProducts(pBST, "data/products.txt");
     cout << "----- WELCOME TO MINI AMAZON -----" << endl;
@@ -22,9 +25,9 @@ int main() {
         cout << "Enter Choice: ";
         cin >> choice;
         if (choice == 1) {
-            Customer::authenticationOptions(ht, pBST);
+            Customer::authenticationOptions(ht, pBST, q, cartStack);
         } else if (choice == 2) {
-            Admin:: login(pBST);
+            Admin:: login(pBST, q);
         } else if (choice == 3) {
             cout << "Exiting..." << endl;
             return  0;

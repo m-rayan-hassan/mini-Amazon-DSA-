@@ -20,22 +20,26 @@ public:
         }
 
         string line;
-        getline(file, line); // skip heading line
+        getline(file, line); // skip header
 
         while (getline(file, line)) {
+            if (line.empty()) continue;
+
             stringstream ss(line);
-            string id, username, password, orders;
-            getline(ss, id, '|');
+            string username, password, orders;
+
             getline(ss, username, '|');
             getline(ss, password, '|');
             getline(ss, orders, '|');
 
-            auto trim = [](string &s){
-                while (!s.empty() && (s[0]==' ')) s.erase(0,1);
-                while (!s.empty() && (s.back()==' ' || s.back()=='\r' || s.back()=='\n')) s.pop_back();
+            auto trim = [](string &s) {
+                while (!s.empty() && isspace(s.front())) s.erase(s.begin());
+                while (!s.empty() && isspace(s.back())) s.pop_back();
             };
 
-            trim(username); trim(password); trim(orders);
+            trim(username);
+            trim(password);
+            trim(orders);
 
             Customer *c = new Customer(username, password, stoi(orders));
             ht.insert(c);
@@ -44,7 +48,6 @@ public:
         file.close();
         cout << "Customers loaded successfully.\n";
     }
-
     static void loadProducts(ProductBST &bst, const string &filename = "data/products.txt") {
         ifstream file(filename);
         if (!file.is_open()) {

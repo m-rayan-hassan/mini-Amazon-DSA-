@@ -16,6 +16,8 @@ public:
         productName = product_name;
         quantity = product_quantity;
     }
+
+    CartItem(const string & pid, const string & pname, const string & qty);
 };
 
 #endif //PROJECT_CART_H

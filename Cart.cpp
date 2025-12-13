@@ -4,97 +4,246 @@
 #include "Customer.h"
 #include "ProductBST.h"
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+
+#include "DispatchQueue.h"
+#include "Order.h"
 
 using namespace std;
 
-// Add product to cart
+static const string CART_FILE = "data/Cart.txt";
+
+void loadCartFromFile(CartStack &cartStack, const string &username) {
+    ifstream file(CART_FILE);
+    if (!file.is_open()) return;
+
+    string line;
+    getline(file, line); // Skip header
+
+    while (getline(file, line)) {
+        stringstream ss(line);
+        string user, idStr, name, qtyStr;
+
+        getline(ss, user, '|');
+        getline(ss, idStr, '|');
+        getline(ss, name, '|');
+        getline(ss, qtyStr, '|');
+
+        auto trim = [](string &s) {
+            while (!s.empty() && s.front() == ' ') s.erase(0, 1);
+            while (!s.empty() && (s.back() == ' ' || s.back()=='\r')) s.pop_back();
+        };
+
+        trim(user); trim(idStr); trim(name); trim(qtyStr);
+
+        if (user == username) {
+            CartItem item(stoi(idStr), name, stoi(qtyStr));
+            cartStack.push(item);
+        }
+    }
+
+    file.close();
+}
+
+void saveCartToFile(CartStack &cartStack, const string &username) {
+    // 1. Read all other users' data first
+    ifstream inFile(CART_FILE);
+    vector<string> allLines;
+
+    string line;
+    if (inFile.is_open()) {
+        while (getline(inFile, line)) {
+            // Keep lines that DO NOT belong to the current user
+            if (line.find(username + " |") != 0) {
+                allLines.push_back(line);
+            }
+        }
+        inFile.close();
+    }
+
+    // 2. Open file for writing (Truncate mode to overwrite)
+    ofstream outFile(CART_FILE, ios::trunc);
+    if (!outFile.is_open()) return;
+
+    // Write other users' data back
+    for (const string &l : allLines) {
+        outFile << l << endl;
+    }
+
+    // 3. Write current user's cart items AND restore the stack safely
+    // We use an auxiliary stack to hold items temporarily
+    CartStack auxStack;
+
+    // Step A: Pop from cartStack, write to file, push to auxStack
+    while (!cartStack.isEmpty()) {
+        CartItem item = cartStack.peek(); // Get data
+
+        // Write to file
+        outFile << username << " | "
+                << item.productId << " | "
+                << item.productName << " | "
+                << item.quantity << endl;
+
+        // Move item to auxiliary stack
+        auxStack.push(cartStack.pop());
+    }
+
+    // Step B: Restore cartStack from auxStack
+    while (!auxStack.isEmpty()) {
+        cartStack.push(auxStack.pop());
+    }
+
+    outFile.close();
+}
+
 void Cart::addProductToCart(ProductBST &pBST, CartStack &cartStack, Customer &customer) {
     int productId, quantity;
 
     cout << "Enter Product ID to add to cart: ";
     cin >> productId;
 
-    Node* product = pBST.search(productId);  // Search in BST
+    Node* product = pBST.search(productId);
     if (product == nullptr) {
-        cout << "Product with product ID " << productId << " not found!" << endl;
+        cout << "Product not found!" << endl;
         return;
     }
 
     if (product->data.stock <= 0) {
-        cout << "Product: " << product->data.productName << " is out of stock!" << endl;
+        cout << product->data.productName << " is out of stock!" << endl;
         return;
     }
 
     cout << "Enter quantity: ";
     cin >> quantity;
+
     if (quantity <= 0 || quantity > product->data.stock) {
-        cout << "Invalid quantity! Available stock: " << product->data.stock << endl;
+        cout << "Invalid quantity! Available stock: "
+             << product->data.stock << endl;
         return;
     }
 
+    CartItem item(productId, product->data.productName, quantity);
+    cartStack.push(item);
 
-    CartItem cartItem(productId, product->data.productName, quantity);
-    cartStack.push(cartItem);
-    cout << quantity << " x " << product->data.productName << " added to cart." << endl;
+    saveCartToFile(cartStack, customer.getUsername());
+
+    cout << "Added to cart successfully.\n";
 }
+
+
 void Cart::displayCart(CartStack &cartStack, Customer &customer) {
-    if (cartStack.isEmpty()) {
-        cout << "Cart is empty!" << endl;
-        return;
-    }
-    cout << "\n------ CART ITEMS ------" << endl;
+    cout << "\n------ CART ITEMS ------\n";
     cartStack.display();
 }
 
-// Cart menu options
-void Cart::cartOptions(CartStack &cartStack, Customer &customer) {
+void Cart::cartOptions(ProductBST &pBST, CartStack &cartStack, Customer &customer, DispatchQueue &q) {
     int choice;
+
+    if (cartStack.isEmpty()) {
+        loadCartFromFile(cartStack, customer.getUsername());
+    }
 
     do {
         cout << "\n------ CART MENU ------\n";
         displayCart(cartStack, customer);
 
         if (!cartStack.isEmpty()) {
-            cout << "1. Delete/Undo last added product: ("
-                 << cartStack.peek().productName << ")" << endl;
+            cout << "1. Delete/Undo last added product ("
+                 << cartStack.peek().productName << ")\n";
         } else {
-            cout << "1. Delete/Undo last added product" << endl;
+            cout << "1. Delete/Undo last added product\n";
         }
 
-        cout << "2. Checkout" << endl;
-        cout << "3. Exit Cart" << endl;
-        cout << "Enter your choice: ";
+        cout << "2. Checkout\n";
+        cout << "3. Exit Cart\n";
+        cout << "Enter choice: ";
         cin >> choice;
 
         switch (choice) {
             case 1:
                 if (cartStack.isEmpty()) {
-                    cout << "Cart is already empty!" << endl;
+                    cout << "Cart is already empty!\n";
                 } else {
-                    cout << "Removed product: "
-                         << cartStack.peek().productName << endl;
+                    cout << "Removed: " << cartStack.peek().productName << endl;
                     cartStack.pop();
+                    saveCartToFile(cartStack, customer.getUsername());
                 }
                 break;
 
-            case 2:
-                if (cartStack.isEmpty()) {
-                    cout << "Cart is empty! Nothing to checkout." << endl;
-                } else {
-                    cout << "Checkout completed successfully!" << endl;
-                    while (!cartStack.isEmpty()) {
-                        cartStack.pop(); // Clear cart
-                    }
-                }
-                break;
+ case 2:
+    if (cartStack.isEmpty()) {
+        cout << "Nothing to checkout!\n";
+    } else {
+        cout << "Select Address: " << endl;
+        cout << "1. Islamabad\n"
+             << "2. Rawalpindi\n"
+             << "3. Lahore\n"
+             << "4. Karachi\n"
+             << "5. Quetta\n"
+             << "6. Peshawar\n"
+             << "7. Faisalabad\n"
+             << "8. Multan\n"
+             << "9. Gujranwala\n"
+             << "10. Sialkot\n"
+             << "11. Hyderabad\n"
+             << "12. Sukkur\n"
+             << "13. Bahawalpur\n"
+             << "14. Abbottabad\n"
+             << "15. Sargodha\n"
+             << "16. Mirpur\n"
+             << "17. Muzaffarabad\n"
+             << "18. Gwadar\n";
+        cout << endl;
+
+        srand(time(0));
+        int orderId = rand() % 900000 + 100000; // 6-digit random ID
+        Order order(orderId, customer.getUsername(), cartStack);
+        q.enqueue(order);
+
+        // --- Save order to file ---
+        ofstream out("data/orders.txt", ios::app);
+        if (!out.is_open()) {
+            cout << "Error: Could not open orders.txt to save order.\n";
+        } else {
+            CartStack tempStack;
+
+            // Pop items from cartStack, write to file, and push into tempStack
+            while (!cartStack.isEmpty()) {
+                CartItem item = cartStack.peek();  // get top item
+                out << orderId << " | " << customer.getUsername() << " | "
+                    << item.productId << " | " << item.productName << " | "
+                    << item.quantity << " | To Dispatch\n";
+
+                tempStack.push(item);
+                cartStack.pop();
+            }
+
+            // Optional: restore cartStack (here we leave it empty after checkout)
+            out.close();
+        }
+        // --------------------------
+
+        cout << "Checkout successful!\n";
+
+        // Ensure cart is empty after checkout
+        while (!cartStack.isEmpty()) {
+            cartStack.pop();
+        }
+        saveCartToFile(cartStack, customer.getUsername());
+    }
+    break;
+
 
             case 3:
-                cout << "Exiting cart menu..." << endl;
-                break;
+                cout << "Exiting cart...\n";
+                return;
 
             default:
-                cout << "Enter a valid choice!" << endl;
-                break;
+                cout << "Invalid choice!\n";
         }
 
     } while (choice != 3);
