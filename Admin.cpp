@@ -158,6 +158,7 @@ void updateOrderStatusInFile(int orderId) {
 // ------------ Admin Login ------------------------
 void Admin::login(ProductBST &pBST, DispatchQueue &q) {
     string inputId, inputPass;
+    cout << "\n----------- ADMIN LOGIN -----------\n";
 
     cout << "Enter Admin ID: ";
     cin >> inputId;
@@ -194,10 +195,10 @@ void Admin::login(ProductBST &pBST, DispatchQueue &q) {
     file.close();
 
     if (authenticated) {
-        cout << "Admin login successful!\n";
+        cout << "\nAdmin login successful!\n";
         adminOptions(pBST, q);
     } else {
-        cout << "Invalid Admin ID or password.\n";
+        cout << "\nInvalid Admin ID or Password!\n";
     }
 }
 
@@ -205,41 +206,42 @@ void Admin::login(ProductBST &pBST, DispatchQueue &q) {
 
 // ------------ Admin Options Menu -------------------
 void Admin::adminOptions(ProductBST &pBST, DispatchQueue &q) {
-    int choice;
+    char choice;
     q.clear();
     loadDispatchOrders(q);
 
     while (true) {
-        cout << "\n----- ADMIN MENU -----\n";
-        cout << "1. View all Products\n";
+        cout << "\n=========== ADMIN PANEL ===========\n";
+        cout << "1. View All Products\n";
         cout << "2. Sort Products by Stock\n";
         cout << "3. View All Orders\n";
-        cout << "4. View To Dispatch Orders\n";
+        cout << "4. View To-Dispatch Orders\n";
         cout << "5. Dispatch Next Order\n";
         cout << "6. Update Product Stock\n";
         cout << "7. Update Product Price\n";
-        cout << "8. Exit\n";
-        cout << "Enter Choice: ";
+        cout << "8. Logout\n";
+        cout << "==================================\n";
+        cout << "Enter your choice: ";
         cin >> choice;
 
         switch (choice) {
-            case 1:
+            case '1':
                 pBST.displayInorder();
                 break;
 
-            case 2:
+            case '2':
                 cout << "(Sorting not implemented yet)\n";
                 break;
 
-            case 3:
+            case '3':
                 viewAllOrders();
                 break;
 
-            case 4:
+            case '4':
                 q.display();
                 break;
 
-            case 5:
+            case '5':
                 if (q.isEmpty()) {
                     cout << "No orders to dispatch!\n";
                 } else {
@@ -253,16 +255,16 @@ void Admin::adminOptions(ProductBST &pBST, DispatchQueue &q) {
                 }
                 break;
 
-            case 6:
+            case '6':
                 cout << "(Stock update code here)\n";
                 break;
 
-            case 7:
+            case '7':
                 cout << "(Price update code here)\n";
                 break;
 
-            case 8:
-                cout << "Exiting Admin...\n";
+            case '8':
+                cout << "\nExiting Admin Panel...\n";
                 return;
 
             default:

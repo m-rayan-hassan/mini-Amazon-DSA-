@@ -2,7 +2,6 @@
 #define PROJECT_DISPATCHQUEUE_H
 
 #include <iostream>
-
 #include "Order.h"
 using namespace std;
 
@@ -62,11 +61,12 @@ public:
             return;
         }
         NodeQueue* temp = front;
-        cout << "----- To Dispatch Order -----\n" << endl;
+        cout << "\n=========== TO DISPATCH ORDERS ===========\n";
         while (temp != nullptr) {
-            cout << "Order Id: " << temp->order.orderId << endl;
-            cout << "Customer Username: " << temp->order.customerUsername << endl;
-            cout << "Items: " << endl;
+            cout << "Order ID : " << temp->order.orderId << "\n";
+            cout << "Customer : " << temp->order.customerUsername << "\n";
+            cout << "Items:\n";
+            cout << "-----------------------------------------\n";
             temp->order.items.display();
             cout << endl;
             temp = temp->next;

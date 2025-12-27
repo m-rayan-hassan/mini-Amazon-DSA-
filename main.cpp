@@ -9,27 +9,33 @@ using namespace std;
 
 
 int main() {
-    int choice;
+    char choice;
     CustomerHashTable ht;
     ProductBST pBST;
     DispatchQueue q;
     CartStack cartStack;
     DataLoader::loadCustomers(ht, "data/customers.txt");
     DataLoader:: loadProducts(pBST, "data/products.txt");
-    cout << "----- WELCOME TO MINI AMAZON -----" << endl;
-    cout << "\n";
+    cout << "=====================================\n";
+    cout << "      WELCOME TO MINI AMAZON\n";
+    cout << "=====================================\n\n";
+
     while (true) {
-        cout << "1. I am Customer: " << endl;
-        cout << "2. I am Admin: " << endl;
-        cout << "3. Exit" << endl;
-        cout << "Enter Choice: ";
+        cout << "\n----------- MAIN MENU -----------\n";
+        cout << "1. Login as Customer\n";
+        cout << "2. Login as Admin\n";
+        cout << "3. Exit\n";
+        cout << "--------------------------------\n";
+        cout << "Enter your choice: ";
         cin >> choice;
-        if (choice == 1) {
+
+        if (choice == '1') {
             Customer::authenticationOptions(ht, pBST, q, cartStack);
-        } else if (choice == 2) {
+        } else if (choice == '2') {
             Admin:: login(pBST, q);
-        } else if (choice == 3) {
-            cout << "Exiting..." << endl;
+        } else if (choice == '3') {
+            cout << "\nThank you for using Mini Amazon.\n";
+            cout << "Goodbye!\n";
             return  0;
         } else {
             cout << "Enter a valid choice!" << endl;

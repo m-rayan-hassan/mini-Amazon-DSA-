@@ -10,23 +10,28 @@
 using namespace std;
 
 void Customer::authenticationOptions(CustomerHashTable &ht, ProductBST &pBST, DispatchQueue &q, CartStack &cartStack) {
-    int choice;
+    char choice;
     while (true) {
-        cout << "1. Login\n2. Signup\n3. Exit\n";
-        cout << "Enter Choice: ";
+        cout << "\n--------- CUSTOMER PORTAL ---------\n";
+        cout << "1. Login\n";
+        cout << "2. Signup\n";
+        cout << "3. Exit\n";
+        cout << "---------------------------------\n";
+        cout << "Enter your choice: ";
         cin >> choice;
 
-        if (choice == 1) login(ht, pBST, q, cartStack);
-        else if (choice == 2) signup(ht, pBST, q, cartStack);
-        else if (choice == 3) {
-            cout << "Exiting...\n";
+        if (choice == '1') login(ht, pBST, q, cartStack);
+        else if (choice == '2') signup(ht, pBST, q, cartStack);
+        else if (choice == '3') {
+            cout << "\nExiting Customer Portal...\n";
             return;
-        } else cout << "Enter a valid choice!\n";
+        } else cout << "Invalid choice! Please try again.\n";
     }
 }
 
 void Customer::login(CustomerHashTable &ht, ProductBST &pBST, DispatchQueue &q, CartStack &cartStack) {
     string username, password;
+    cout << "\n----------- LOGIN -----------\n";
     cout << "Enter username: ";
     cin >> username;
     cout << "Enter password: ";
@@ -34,11 +39,12 @@ void Customer::login(CustomerHashTable &ht, ProductBST &pBST, DispatchQueue &q, 
 
     Customer *c = ht.search(username);
     if (c != nullptr && c->getPassword() == password) {
-        cout << "Login successful! Welcome " << username << endl;
+        cout << "\nLogin successful!\n";
+        cout << "Welcome, " << username << "\n";
         pBST.displayPostorder();
         customerOptions(pBST, *c,q, cartStack);
     } else {
-        cout << "Invalid username or password.\n";
+        cout << "\nInvalid username or password!\n";
     }
 }
 
@@ -46,14 +52,15 @@ void Customer::signup(CustomerHashTable &ht, ProductBST &pBST,
                       DispatchQueue &q, CartStack &cartStack) {
 
     string username, password;
-    cout << "Enter username: ";
+    cout << "\n----------- SIGNUP -----------\n";
+    cout << "Choose username: ";
     cin >> username;
-    cout << "Enter password: ";
+    cout << "Choose password: ";
     cin >> password;
 
     // Check if username already exists in hash table
     if (ht.search(username) != nullptr) {
-        cout << "Username already exists!\n";
+        cout << "\nUsername already exists. Please try another.\n";
         return;
     }
 
@@ -76,7 +83,9 @@ void Customer::signup(CustomerHashTable &ht, ProductBST &pBST,
 
     out.close();
 
-    cout << "Signup successful! You can now login.\n";
+    cout << "\nSignup successful!\n";
+    cout << "You can now login using your credentials.\n";
+
 }
 
 void Customer::viewProfile(Customer &customer) {
@@ -86,8 +95,11 @@ void Customer::viewProfile(Customer &customer) {
         return;
     }
 
-    cout << "\n===== CUSTOMER PROFILE =====\n";
-    cout << "Username: " << customer.getUsername() << endl;
+    cout << "\n=====================================\n";
+    cout << "           CUSTOMER PROFILE\n";
+    cout << "=====================================\n";
+    cout << "Username: " << customer.getUsername() << "\n";
+
 
     string line;
     getline(file, line); // skip header
@@ -129,20 +141,20 @@ void Customer::viewProfile(Customer &customer) {
 
         // New Order
         if (orderId != lastOrderId) {
-            cout << "\n----------------------------\n";
-            cout << "Order ID: " << orderId << endl;
-            cout << "Status  : " << status << endl;
+            cout << "\n-------------------------------------\n";
+            cout << "Order ID : " << orderId << "\n";
+            cout << "Status   : " << status << "\n";
             cout << "Items:\n";
             foundAnyOrder = true;
             lastOrderId = orderId;
         }
 
-        cout << "  Product: " << pname
-             << " | Qty: " << qty << endl;
+        cout << "  - " << pname << " | Quantity: " << qty << "\n";
+
     }
 
     if (!foundAnyOrder) {
-        cout << "\nNo orders found.\n";
+        cout << "\nNo orders found for this account.\n";
     }
 
     cout << "\n============================\n";
@@ -151,41 +163,44 @@ void Customer::viewProfile(Customer &customer) {
 
 
 void Customer::customerOptions(ProductBST &pBST, Customer &customer, DispatchQueue &q, CartStack &cartStack) {
-    int choice;
+    char choice;
     while (true) {
-        cout << "1. View Products" << endl;
-        cout << "2. Sort Products by Price (Lowest to Highest)" << endl;
-        cout << "3. Search Product" << endl;
-        cout << "4. Add Product to Cart" << endl;
-        cout << "5. Go to Cart" << endl;
-        cout << "6. View Profile" << endl;
-        cout << "7. Exit" << endl;
-        cout << "Enter Choice: ";
+        cout << "\n----------- CUSTOMER MENU -----------\n";
+        cout << "1. View Products\n";
+        cout << "2. Sort Products by Price (Low → High)\n";
+        cout << "3. Search Product\n";
+        cout << "4. Add Product to Cart\n";
+        cout << "5. Go to Cart\n";
+        cout << "6. View Profile\n";
+        cout << "7. Logout\n";
+        cout << "------------------------------------\n";
+        cout << "Enter your choice: ";
         cin >> choice;
 
         switch (choice) {
-            case 1:
+            case '1':
                 pBST.displayInorder();
                 break;
-            case 2:
+            case '2':
                 cout << "";
                 break;
-            case 3:
+            case '3':
                 cout << "";
                 break;
-            case 4:
+            case '4':
                 Cart::addProductToCart(pBST, cartStack, customer);
                 break;
-            case 5:
+            case '5':
                 Cart::cartOptions(pBST,cartStack, customer, q);
                 break;
-            case 6:
+            case '6':
                 viewProfile(customer);
                 break;
-            case 7:
+            case '7':
                 return;
             default:
-                cout << "Enter a valid Choice!" << endl;
+                cout << "Invalid option! Please select again.\n";
+
         }
     }
 }

@@ -8,4 +8,5 @@
 153835 | rayan | 4 | Mechanical Keyboard | 1 | Delivered
 720535 | rayan | 12 | Bluetooth Speaker | 2 | Delivered
 898720 | rayan | 14 | Sunglasses | 1 | Delivered
-873200 | rayan | 11 | Notebook | 1 | To Dispatch
+873200 | rayan | 11 | Notebook | 1 | Delivered
+278157 | rayan | 4 | Mechanical Keyboard | 1 | Delivered

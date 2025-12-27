@@ -131,7 +131,7 @@ void Cart::addProductToCart(ProductBST &pBST, CartStack &cartStack, Customer &cu
 
     saveCartToFile(cartStack, customer.getUsername());
 
-    cout << "Added to cart successfully.\n";
+    cout << "Added " << product->data.productName << " to cart successfully.\n";
 }
 
 
@@ -141,14 +141,16 @@ void Cart::displayCart(CartStack &cartStack, Customer &customer) {
 }
 
 void Cart::cartOptions(ProductBST &pBST, CartStack &cartStack, Customer &customer, DispatchQueue &q) {
-    int choice;
+    char choice;
 
     if (cartStack.isEmpty()) {
         loadCartFromFile(cartStack, customer.getUsername());
     }
 
     do {
-        cout << "\n------ CART MENU ------\n";
+        cout << "\n=========== YOUR CART ===========\n";
+
+        cout << "\n----------- CART MENU -----------\n";
         displayCart(cartStack, customer);
 
         if (!cartStack.isEmpty()) {
@@ -164,81 +166,84 @@ void Cart::cartOptions(ProductBST &pBST, CartStack &cartStack, Customer &custome
         cin >> choice;
 
         switch (choice) {
-            case 1:
+            case '1':
                 if (cartStack.isEmpty()) {
-                    cout << "Cart is already empty!\n";
+                    cout << "\nCart is empty!\n";
                 } else {
-                    cout << "Removed: " << cartStack.peek().productName << endl;
+                    cout << "\nRemoved: " << cartStack.peek().productName << endl;
                     cartStack.pop();
                     saveCartToFile(cartStack, customer.getUsername());
                 }
                 break;
 
- case 2:
-    if (cartStack.isEmpty()) {
-        cout << "Nothing to checkout!\n";
-    } else {
-        cout << "Select Address: " << endl;
-        cout << "1. Islamabad\n"
-             << "2. Rawalpindi\n"
-             << "3. Lahore\n"
-             << "4. Karachi\n"
-             << "5. Quetta\n"
-             << "6. Peshawar\n"
-             << "7. Faisalabad\n"
-             << "8. Multan\n"
-             << "9. Gujranwala\n"
-             << "10. Sialkot\n"
-             << "11. Hyderabad\n"
-             << "12. Sukkur\n"
-             << "13. Bahawalpur\n"
-             << "14. Abbottabad\n"
-             << "15. Sargodha\n"
-             << "16. Mirpur\n"
-             << "17. Muzaffarabad\n"
-             << "18. Gwadar\n";
-        cout << endl;
+             case '2':
+                if (cartStack.isEmpty()) {
+                    cout << "Nothing to checkout!\n";
+                } else {
+                    cout << "Select Address: " << endl;
+                    cout << "1. Islamabad\n"
+                         << "2. Rawalpindi\n"
+                         << "3. Lahore\n"
+                         << "4. Karachi\n"
+                         << "5. Quetta\n"
+                         << "6. Peshawar\n"
+                         << "7. Faisalabad\n"
+                         << "8. Multan\n"
+                         << "9. Gujranwala\n"
+                         << "10. Sialkot\n"
+                         << "11. Hyderabad\n"
+                         << "12. Sukkur\n"
+                         << "13. Bahawalpur\n"
+                         << "14. Abbottabad\n"
+                         << "15. Sargodha\n"
+                         << "16. Mirpur\n"
+                         << "17. Muzaffarabad\n"
+                         << "18. Gwadar\n";
+                    cout << endl;
 
-        srand(time(0));
-        int orderId = rand() % 900000 + 100000; // 6-digit random ID
-        Order order(orderId, customer.getUsername(), cartStack);
-        q.enqueue(order);
+                    srand(time(0));
+                    int orderId = rand() % 900000 + 100000; // 6-digit random ID
+                    Order order(orderId, customer.getUsername(), cartStack);
+                    q.enqueue(order);
 
-        // --- Save order to file ---
-        ofstream out("data/orders.txt", ios::app);
-        if (!out.is_open()) {
-            cout << "Error: Could not open orders.txt to save order.\n";
-        } else {
-            CartStack tempStack;
+                    // --- Save order to file ---
+                    ofstream out("data/orders.txt", ios::app);
+                    if (!out.is_open()) {
+                        cout << "Error: Could not open orders.txt to save order.\n";
+                    } else {
+                        CartStack tempStack;
 
-            // Pop items from cartStack, write to file, and push into tempStack
-            while (!cartStack.isEmpty()) {
-                CartItem item = cartStack.peek();  // get top item
-                out << orderId << " | " << customer.getUsername() << " | "
-                    << item.productId << " | " << item.productName << " | "
-                    << item.quantity << " | To Dispatch\n";
+                        // Pop items from cartStack, write to file, and push into tempStack
+                        while (!cartStack.isEmpty()) {
+                            CartItem item = cartStack.peek();  // get top item
+                            out << orderId << " | " << customer.getUsername() << " | "
+                                << item.productId << " | " << item.productName << " | "
+                                << item.quantity << " | To Dispatch\n";
 
-                tempStack.push(item);
-                cartStack.pop();
-            }
+                            tempStack.push(item);
+                            cartStack.pop();
+                        }
 
-            // Optional: restore cartStack (here we leave it empty after checkout)
-            out.close();
-        }
-        // --------------------------
+                        // Optional: restore cartStack (here we leave it empty after checkout)
+                        out.close();
+                    }
+                    // --------------------------
 
-        cout << "Checkout successful!\n";
+                    cout << "\n=====================================\n";
+                    cout << "      ORDER PLACED SUCCESSFULLY\n";
+                    cout << "=====================================\n";
+                    cout << "Your order has been placed and will be dispatched soon.\n";
 
-        // Ensure cart is empty after checkout
-        while (!cartStack.isEmpty()) {
-            cartStack.pop();
-        }
-        saveCartToFile(cartStack, customer.getUsername());
-    }
-    break;
+                    // Ensure cart is empty after checkout
+                    while (!cartStack.isEmpty()) {
+                        cartStack.pop();
+                    }
+                    saveCartToFile(cartStack, customer.getUsername());
+                }
+                break;
 
 
-            case 3:
+            case '3':
                 cout << "Exiting cart...\n";
                 return;
 
