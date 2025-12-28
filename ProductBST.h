@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include "Product.h"
+#include <fstream>
+#include "FileHandler.h"
 using namespace std;
 
 
@@ -54,14 +56,14 @@ class ProductBST {
         cout << "Rating: " << node->data.rating << endl;
         cout << "Items Left: " << node->data.stock << endl;
         cout << "\n";
-        inorder(node->left);
-        inorder(node->right);
+        preorder(node->left);
+        preorder(node->right);
     }
 
     void postorder(Node* node) {
         if (node == nullptr) return;
-        inorder(node->left);
-        inorder(node->right);
+        postorder(node->left);
+        postorder(node->right);
         cout << "Product ID: " << node->data.productId << endl;
         cout << "Product Name: " << node->data.productName << endl;
         cout << "Price: " << node->data.price << endl;
@@ -78,6 +80,26 @@ class ProductBST {
             return search(node->left, key);
 
         return search(node->right, key);
+    }
+
+
+    void updateQuantity(Node* node, int key, int qty, string type) {
+        if (node == nullptr) return;
+
+        if (key == node->data.productId) {
+            if (type == "add")
+                node->data.stock -= qty;
+            else if (type == "undo")
+                node->data.stock += qty;
+
+            updateProductInFile(key, qty, type);
+            return;
+        }
+
+        if (key < node->data.productId)
+            updateQuantity(node->left, key, qty, type);
+        else
+            updateQuantity(node->right, key, qty, type);
     }
 
 public:
@@ -111,6 +133,10 @@ public:
         return search(root, key);
     }
 
-};
+    void searchAndUpdateQuantity(int productId, int quantity, string type) {
+        updateQuantity(root, productId, quantity, type);
+    }
 
+
+};
 #endif //PROJECT_PRODUCTBST_H

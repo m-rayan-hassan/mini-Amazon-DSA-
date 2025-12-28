@@ -48,7 +48,7 @@ public:
         file.close();
         cout << "Customers loaded successfully.\n";
     }
-    static void loadProducts(ProductBST &bst, const string &filename = "data/products.txt") {
+    static void loadProducts(ProductBST &bst, ProductPriceHeap &h, const string &filename = "data/products.txt") {
         ifstream file(filename);
         if (!file.is_open()) {
             cout << "Error: Could not open " << filename << endl;
@@ -90,6 +90,7 @@ public:
             );
 
             bst.insert(p);
+            h.insert(p);
         }
 
         file.close();

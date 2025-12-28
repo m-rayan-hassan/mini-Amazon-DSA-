@@ -18,4 +18,7 @@ add_executable(project main.cpp
         Cart.h
         DispatchQueue.h
         Order.h
+        ProductPriceHeap.h
+        FileHandler.cpp
+        FileHandler.h
 )

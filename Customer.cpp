@@ -9,7 +9,7 @@
 #include "DispatchQueue.h"
 using namespace std;
 
-void Customer::authenticationOptions(CustomerHashTable &ht, ProductBST &pBST, DispatchQueue &q, CartStack &cartStack) {
+void Customer::authenticationOptions(CustomerHashTable &ht, ProductBST &pBST, ProductPriceHeap &h, DispatchQueue &q, CartStack &cartStack) {
     char choice;
     while (true) {
         cout << "\n--------- CUSTOMER PORTAL ---------\n";
@@ -20,8 +20,8 @@ void Customer::authenticationOptions(CustomerHashTable &ht, ProductBST &pBST, Di
         cout << "Enter your choice: ";
         cin >> choice;
 
-        if (choice == '1') login(ht, pBST, q, cartStack);
-        else if (choice == '2') signup(ht, pBST, q, cartStack);
+        if (choice == '1') login(ht, pBST, h, q, cartStack);
+        else if (choice == '2') signup(ht, pBST, h, q, cartStack);
         else if (choice == '3') {
             cout << "\nExiting Customer Portal...\n";
             return;
@@ -29,7 +29,7 @@ void Customer::authenticationOptions(CustomerHashTable &ht, ProductBST &pBST, Di
     }
 }
 
-void Customer::login(CustomerHashTable &ht, ProductBST &pBST, DispatchQueue &q, CartStack &cartStack) {
+void Customer::login(CustomerHashTable &ht, ProductBST &pBST, ProductPriceHeap &h, DispatchQueue &q, CartStack &cartStack) {
     string username, password;
     cout << "\n----------- LOGIN -----------\n";
     cout << "Enter username: ";
@@ -42,14 +42,13 @@ void Customer::login(CustomerHashTable &ht, ProductBST &pBST, DispatchQueue &q, 
         cout << "\nLogin successful!\n";
         cout << "Welcome, " << username << "\n";
         pBST.displayPostorder();
-        customerOptions(pBST, *c,q, cartStack);
+        customerOptions(pBST, *c, h, q, cartStack);
     } else {
         cout << "\nInvalid username or password!\n";
     }
 }
 
-void Customer::signup(CustomerHashTable &ht, ProductBST &pBST,
-                      DispatchQueue &q, CartStack &cartStack) {
+void Customer::signup(CustomerHashTable &ht, ProductBST &pBST, ProductPriceHeap &h, DispatchQueue &q, CartStack &cartStack) {
 
     string username, password;
     cout << "\n----------- SIGNUP -----------\n";
@@ -162,17 +161,16 @@ void Customer::viewProfile(Customer &customer) {
 }
 
 
-void Customer::customerOptions(ProductBST &pBST, Customer &customer, DispatchQueue &q, CartStack &cartStack) {
+void Customer::customerOptions(ProductBST &pBST, Customer &customer, ProductPriceHeap &h,  DispatchQueue &q, CartStack &cartStack) {
     char choice;
     while (true) {
         cout << "\n----------- CUSTOMER MENU -----------\n";
         cout << "1. View Products\n";
-        cout << "2. Sort Products by Price (Low → High)\n";
-        cout << "3. Search Product\n";
-        cout << "4. Add Product to Cart\n";
-        cout << "5. Go to Cart\n";
-        cout << "6. View Profile\n";
-        cout << "7. Logout\n";
+        cout << "2. Sort Products by Price (Low -> High)\n";
+        cout << "3. Add Product to Cart\n";
+        cout << "4. Go to Cart\n";
+        cout << "5. View Profile\n";
+        cout << "6. Logout\n";
         cout << "------------------------------------\n";
         cout << "Enter your choice: ";
         cin >> choice;
@@ -182,21 +180,19 @@ void Customer::customerOptions(ProductBST &pBST, Customer &customer, DispatchQue
                 pBST.displayInorder();
                 break;
             case '2':
-                cout << "";
+                h.heapSort();
+                h.display();
                 break;
             case '3':
-                cout << "";
-                break;
-            case '4':
                 Cart::addProductToCart(pBST, cartStack, customer);
                 break;
-            case '5':
+            case '4':
                 Cart::cartOptions(pBST,cartStack, customer, q);
                 break;
-            case '6':
+            case '5':
                 viewProfile(customer);
                 break;
-            case '7':
+            case '6':
                 return;
             default:
                 cout << "Invalid option! Please select again.\n";

@@ -3,6 +3,7 @@
 #include "CustomerHashTable.h"
 #include "Admin.h"
 #include "ProductBST.h"
+#include "ProductPriceHeap.h"
 #include "DataLoader.h"
 #include "DispatchQueue.h"
 using namespace std;
@@ -12,10 +13,11 @@ int main() {
     char choice;
     CustomerHashTable ht;
     ProductBST pBST;
+    ProductPriceHeap h;
     DispatchQueue q;
     CartStack cartStack;
     DataLoader::loadCustomers(ht, "data/customers.txt");
-    DataLoader:: loadProducts(pBST, "data/products.txt");
+    DataLoader:: loadProducts(pBST, h, "data/products.txt");
     cout << "=====================================\n";
     cout << "      WELCOME TO MINI AMAZON\n";
     cout << "=====================================\n\n";
@@ -30,7 +32,7 @@ int main() {
         cin >> choice;
 
         if (choice == '1') {
-            Customer::authenticationOptions(ht, pBST, q, cartStack);
+            Customer::authenticationOptions(ht, pBST, h, q, cartStack);
         } else if (choice == '2') {
             Admin:: login(pBST, q);
         } else if (choice == '3') {

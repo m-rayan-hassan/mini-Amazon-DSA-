@@ -5,6 +5,7 @@
 
 #include "CartStack.h"
 #include "ProductBST.h"
+#include "ProductPriceHeap.h"
 class DispatchQueue;
 using namespace std;
 
@@ -30,13 +31,13 @@ public:
     int getOrders() const { return totalOrders; }
 
     // ------------------- Authentication -------------------
-    static void authenticationOptions(CustomerHashTable &ht, ProductBST &pBST, DispatchQueue &q, CartStack &cartStack);
+    static void authenticationOptions(CustomerHashTable &ht, ProductBST &pBST, ProductPriceHeap &h, DispatchQueue &q, CartStack &cartStack);
 
-    static void login(CustomerHashTable &ht, ProductBST &pBST, DispatchQueue &q, CartStack &cartStack);
+    static void login(CustomerHashTable &ht, ProductBST &pBST, ProductPriceHeap &h, DispatchQueue &q, CartStack &cartStack);
 
-    static void signup(CustomerHashTable &ht, ProductBST &pBST, DispatchQueue &q, CartStack &cartStack);
+    static void signup(CustomerHashTable &ht, ProductBST &pBST, ProductPriceHeap &h,  DispatchQueue &q, CartStack &cartStack);
 
-    static void customerOptions(ProductBST &pBST, Customer &customer, DispatchQueue &q, CartStack &cartStack);
+    static void customerOptions(ProductBST &pBST, Customer &customer, ProductPriceHeap &h, DispatchQueue &q, CartStack &cartStack);
 
     static void viewProfile(Customer &customer);
 };

@@ -10,3 +10,5 @@
 898720 | rayan | 14 | Sunglasses | 1 | Delivered
 873200 | rayan | 11 | Notebook | 1 | Delivered
 278157 | rayan | 4 | Mechanical Keyboard | 1 | Delivered
+838664 | rayan | 1 | Laptop | 2 | Delivered
+237538 | rayan | 20 | Wallet | 1 | Delivered

@@ -50,14 +50,12 @@ void loadCartFromFile(CartStack &cartStack, const string &username) {
 }
 
 void saveCartToFile(CartStack &cartStack, const string &username) {
-    // 1. Read all other users' data first
     ifstream inFile(CART_FILE);
     vector<string> allLines;
 
     string line;
     if (inFile.is_open()) {
         while (getline(inFile, line)) {
-            // Keep lines that DO NOT belong to the current user
             if (line.find(username + " |") != 0) {
                 allLines.push_back(line);
             }
@@ -65,7 +63,6 @@ void saveCartToFile(CartStack &cartStack, const string &username) {
         inFile.close();
     }
 
-    // 2. Open file for writing (Truncate mode to overwrite)
     ofstream outFile(CART_FILE, ios::trunc);
     if (!outFile.is_open()) return;
 
@@ -74,31 +71,27 @@ void saveCartToFile(CartStack &cartStack, const string &username) {
         outFile << l << endl;
     }
 
-    // 3. Write current user's cart items AND restore the stack safely
-    // We use an auxiliary stack to hold items temporarily
     CartStack auxStack;
 
-    // Step A: Pop from cartStack, write to file, push to auxStack
     while (!cartStack.isEmpty()) {
-        CartItem item = cartStack.peek(); // Get data
+        CartItem item = cartStack.peek();
 
-        // Write to file
         outFile << username << " | "
                 << item.productId << " | "
                 << item.productName << " | "
                 << item.quantity << endl;
 
-        // Move item to auxiliary stack
         auxStack.push(cartStack.pop());
     }
 
-    // Step B: Restore cartStack from auxStack
     while (!auxStack.isEmpty()) {
         cartStack.push(auxStack.pop());
     }
 
     outFile.close();
 }
+
+
 
 void Cart::addProductToCart(ProductBST &pBST, CartStack &cartStack, Customer &customer) {
     int productId, quantity;
@@ -128,12 +121,10 @@ void Cart::addProductToCart(ProductBST &pBST, CartStack &cartStack, Customer &cu
 
     CartItem item(productId, product->data.productName, quantity);
     cartStack.push(item);
-
+    pBST.searchAndUpdateQuantity(cartStack.peek().productId, cartStack.peek().quantity, "add");
     saveCartToFile(cartStack, customer.getUsername());
-
     cout << "Added " << product->data.productName << " to cart successfully.\n";
 }
-
 
 void Cart::displayCart(CartStack &cartStack, Customer &customer) {
     cout << "\n------ CART ITEMS ------\n";
@@ -171,6 +162,7 @@ void Cart::cartOptions(ProductBST &pBST, CartStack &cartStack, Customer &custome
                     cout << "\nCart is empty!\n";
                 } else {
                     cout << "\nRemoved: " << cartStack.peek().productName << endl;
+                    pBST.searchAndUpdateQuantity(cartStack.peek().productId, cartStack.peek().quantity, "undo");
                     cartStack.pop();
                     saveCartToFile(cartStack, customer.getUsername());
                 }
@@ -202,20 +194,18 @@ void Cart::cartOptions(ProductBST &pBST, CartStack &cartStack, Customer &custome
                     cout << endl;
 
                     srand(time(0));
-                    int orderId = rand() % 900000 + 100000; // 6-digit random ID
+                    int orderId = rand() % 900000 + 100000;
                     Order order(orderId, customer.getUsername(), cartStack);
                     q.enqueue(order);
 
-                    // --- Save order to file ---
                     ofstream out("data/orders.txt", ios::app);
                     if (!out.is_open()) {
                         cout << "Error: Could not open orders.txt to save order.\n";
                     } else {
                         CartStack tempStack;
 
-                        // Pop items from cartStack, write to file, and push into tempStack
                         while (!cartStack.isEmpty()) {
-                            CartItem item = cartStack.peek();  // get top item
+                            CartItem item = cartStack.peek();
                             out << orderId << " | " << customer.getUsername() << " | "
                                 << item.productId << " | " << item.productName << " | "
                                 << item.quantity << " | To Dispatch\n";
@@ -224,10 +214,8 @@ void Cart::cartOptions(ProductBST &pBST, CartStack &cartStack, Customer &custome
                             cartStack.pop();
                         }
 
-                        // Optional: restore cartStack (here we leave it empty after checkout)
                         out.close();
                     }
-                    // --------------------------
 
                     cout << "\n=====================================\n";
                     cout << "      ORDER PLACED SUCCESSFULLY\n";
