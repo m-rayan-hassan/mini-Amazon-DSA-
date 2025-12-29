@@ -6,12 +6,12 @@
 #include <string>
 using namespace std;
 
-class Customer; // forward declaration
+class Customer;
 
 class CustomerHashTable {
 private:
     static const int TABLE_SIZE = 101;
-    list<Customer*> table[TABLE_SIZE]; // store pointers to avoid circular include
+    list<Customer*> table[TABLE_SIZE];
 
     int hashFunction(const string &key) {
         int hash = 0;

@@ -41,7 +41,6 @@ void Customer::login(CustomerHashTable &ht, ProductBST &pBST, ProductPriceHeap &
     if (c != nullptr && c->getPassword() == password) {
         cout << "\nLogin successful!\n";
         cout << "Welcome, " << username << "\n";
-        pBST.displayPostorder();
         customerOptions(pBST, *c, h, q, cartStack);
     } else {
         cout << "\nInvalid username or password!\n";
@@ -57,7 +56,6 @@ void Customer::signup(CustomerHashTable &ht, ProductBST &pBST, ProductPriceHeap 
     cout << "Choose password: ";
     cin >> password;
 
-    // Check if username already exists in hash table
     if (ht.search(username) != nullptr) {
         cout << "\nUsername already exists. Please try another.\n";
         return;

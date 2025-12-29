@@ -172,27 +172,6 @@ void Cart::cartOptions(ProductBST &pBST, CartStack &cartStack, Customer &custome
                 if (cartStack.isEmpty()) {
                     cout << "Nothing to checkout!\n";
                 } else {
-                    cout << "Select Address: " << endl;
-                    cout << "1. Islamabad\n"
-                         << "2. Rawalpindi\n"
-                         << "3. Lahore\n"
-                         << "4. Karachi\n"
-                         << "5. Quetta\n"
-                         << "6. Peshawar\n"
-                         << "7. Faisalabad\n"
-                         << "8. Multan\n"
-                         << "9. Gujranwala\n"
-                         << "10. Sialkot\n"
-                         << "11. Hyderabad\n"
-                         << "12. Sukkur\n"
-                         << "13. Bahawalpur\n"
-                         << "14. Abbottabad\n"
-                         << "15. Sargodha\n"
-                         << "16. Mirpur\n"
-                         << "17. Muzaffarabad\n"
-                         << "18. Gwadar\n";
-                    cout << endl;
-
                     srand(time(0));
                     int orderId = rand() % 900000 + 100000;
                     Order order(orderId, customer.getUsername(), cartStack);

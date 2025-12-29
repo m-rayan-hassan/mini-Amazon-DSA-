@@ -9,7 +9,7 @@ using namespace std;
 
 static const string ORDERS_FILE = "data/orders.txt";
 
-// -------- Helper: trim function ----------
+
 static void trim(string &s) {
     while (!s.empty() && (s.front() == ' ')) s.erase(0, 1);
     while (!s.empty() &&
@@ -17,7 +17,6 @@ static void trim(string &s) {
         s.pop_back();
 }
 
-// ----------- View All Orders ----------------
 void Admin::viewAllOrders() {
     ifstream file("data/orders.txt");
     if (!file.is_open()) {
@@ -28,7 +27,7 @@ void Admin::viewAllOrders() {
     cout << "\n====== ALL ORDERS ======\n";
 
     string line;
-    getline(file, line); // skip heading
+    getline(file, line);
 
     while (getline(file, line)) {
         stringstream ss(line);
@@ -60,7 +59,7 @@ void Admin::viewAllOrders() {
 
 
 void loadDispatchOrders(DispatchQueue &q) {
-    if (!q.isEmpty()) return;  // Only load if queue is empty
+    if (!q.isEmpty()) return;
 
     ifstream file("data/orders.txt");
     if (!file.is_open()) {
@@ -69,7 +68,7 @@ void loadDispatchOrders(DispatchQueue &q) {
     }
 
     string line;
-    getline(file, line);  // skip header
+    getline(file, line);
 
     Order currentOrder;
     bool hasOrder = false;
@@ -88,7 +87,6 @@ void loadDispatchOrders(DispatchQueue &q) {
         getline(ss, qtyStr, '|');
         getline(ss, status, '|');
 
-        // Trim spaces
         auto trim = [](string &s) {
             while (!s.empty() && isspace(s.front())) s.erase(s.begin());
             while (!s.empty() && isspace(s.back())) s.pop_back();
@@ -128,13 +126,12 @@ void loadDispatchOrders(DispatchQueue &q) {
 
 
 
-// ---------- Update Orders.txt After Dispatch ----------
 void updateOrderStatusInFile(int orderId) {
     ifstream in(ORDERS_FILE);
     vector<string> lines;
     string line;
 
-    getline(in, line);                          // keep header
+    getline(in, line);
     string header = line;
     lines.push_back(header);
 
@@ -155,7 +152,6 @@ void updateOrderStatusInFile(int orderId) {
 
 
 
-// ------------ Admin Login ------------------------
 void Admin::login(ProductBST &pBST, DispatchQueue &q) {
     string inputId, inputPass;
     cout << "\n----------- ADMIN LOGIN -----------\n";
@@ -203,8 +199,6 @@ void Admin::login(ProductBST &pBST, DispatchQueue &q) {
 }
 
 
-
-// ------------ Admin Options Menu -------------------
 void Admin::adminOptions(ProductBST &pBST, DispatchQueue &q) {
     char choice;
     q.clear();
@@ -213,13 +207,11 @@ void Admin::adminOptions(ProductBST &pBST, DispatchQueue &q) {
     while (true) {
         cout << "\n=========== ADMIN PANEL ===========\n";
         cout << "1. View All Products\n";
-        cout << "2. Sort Products by Stock\n";
-        cout << "3. View All Orders\n";
-        cout << "4. View To-Dispatch Orders\n";
-        cout << "5. Dispatch Next Order\n";
-        cout << "6. Update Product Stock\n";
-        cout << "7. Update Product Price\n";
-        cout << "8. Logout\n";
+        cout << "2. View All Orders\n";
+        cout << "3. View To-Dispatch Orders\n";
+        cout << "4. Dispatch Next Order\n";
+        cout << "5. Update Product Stock\n";
+        cout << "6. Logout\n";
         cout << "==================================\n";
         cout << "Enter your choice: ";
         cin >> choice;
@@ -230,18 +222,14 @@ void Admin::adminOptions(ProductBST &pBST, DispatchQueue &q) {
                 break;
 
             case '2':
-                cout << "(Sorting not implemented yet)\n";
-                break;
-
-            case '3':
                 viewAllOrders();
                 break;
 
-            case '4':
+            case '3':
                 q.display();
                 break;
 
-            case '5':
+            case '4':
                 if (q.isEmpty()) {
                     cout << "No orders to dispatch!\n";
                 } else {
@@ -255,15 +243,27 @@ void Admin::adminOptions(ProductBST &pBST, DispatchQueue &q) {
                 }
                 break;
 
+            case '5': {
+                int productId, quantity;
+                cout << "Enter Product ID: ";
+                cin >> productId;
+                cout << "Enter quantity: ";
+                cin >> quantity;
+                Node* product = pBST.search(productId);
+                if (product == nullptr) {
+                    cout << "Product not found!" << endl;
+                    return;
+                }
+                if (quantity < 0) {
+                    cout << "Invalid Quantity!" << endl;
+                    return;
+                }
+                pBST.searchAndUpdateQuantity(productId, quantity, "update");
+                cout << "Product Stock Updated Successfully!" << endl;
+                break;
+            }
+
             case '6':
-                cout << "(Stock update code here)\n";
-                break;
-
-            case '7':
-                cout << "(Price update code here)\n";
-                break;
-
-            case '8':
                 cout << "\nExiting Admin Panel...\n";
                 return;
 

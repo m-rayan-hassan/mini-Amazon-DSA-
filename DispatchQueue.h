@@ -75,7 +75,7 @@ public:
 
     void clear() {
         while (!isEmpty()) {
-            dequeue();   // dequeue already deletes nodes safely
+            dequeue();
         }
     }
 

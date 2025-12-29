@@ -37,6 +37,8 @@ void updateProductInFile(int productId, int quantity, string type) {
                 currentStock -= quantity;
             else if (type == "undo")
                 currentStock += quantity;
+            else if (type == "update")
+                currentStock = quantity;
         }
 
         lines.push_back(

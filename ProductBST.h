@@ -91,6 +91,8 @@ class ProductBST {
                 node->data.stock -= qty;
             else if (type == "undo")
                 node->data.stock += qty;
+            else if (type == "update")
+                node->data.stock = qty;
 
             updateProductInFile(key, qty, type);
             return;
